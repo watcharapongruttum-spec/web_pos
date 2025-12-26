@@ -1,0 +1,41 @@
+<div class="layout" [class.collapsed]="isCollapsed">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+
+    <!-- Sidebar Header -->
+    <div class="sidebar-header">
+      <span class="brand">POS Admin</span>
+
+      <button class="toggle-btn" (click)="toggleSidebar()">
+        ☰
+      </button>
+    </div>
+
+    <nav class="menu">
+      <a routerLink="sku-masters" routerLinkActive="active">
+        📦 <span>จัดการสินค้า</span>
+      </a>
+
+                <a routerLink="categories" routerLinkActive="active">
+        📦 <span>จัดการประเภทสินค้า</span>
+      </a>
+
+      <a routerLink="users" routerLinkActive="active">
+        👤 <span>จัดการผู้ใช้</span>
+      </a>
+
+  
+    </nav>
+
+    <button class="logout-btn" (click)="logout()">
+      🚪 <span>Logout</span>
+    </button>
+  </aside>
+
+
+  <main class="content">
+    <router-outlet></router-outlet>
+  </main>
+
+</div>

@@ -1,0 +1,230 @@
+<div class="page">
+
+  <!-- ===== HEADER ===== -->
+  <div class="page-header">
+    <h2>จัดการสินค้า (SKU)</h2>
+
+   
+  </div>
+
+  <!-- ===== FILTER CATEGORY ===== -->
+  <div class="page-header">
+
+    <section class="filter-bar">
+      <div class="form-group">
+        <label for="search_category">
+          <i class="fa fa-tags"></i> หมวดสินค้า
+        </label>
+
+        <select
+          id="search_category"
+          class="form-control role-select"
+          [(ngModel)]="search_cat"
+          (change)="search_category()"
+        >
+      
+          <option  value="" >ทั้งหมด</option>
+
+          <option
+            *ngFor="let cate of categories"
+            [value]="cate.id"
+          >
+            {{ cate.name }}
+          </option>
+        </select>
+      </div>
+    </section>
+
+
+
+     <div class="header-actions">
+      <input
+        type="text"
+        placeholder="ค้นหาสินค้า..."
+        [(ngModel)]="searchKeyword"
+        (input)="search()"
+      />
+      <button class="add-btn" (click)="openAdd()">➕ เพิ่มสินค้า</button>
+    </div>
+  </div>
+
+
+<div class="pagination-bar">
+
+  <!-- เลือกจำนวนต่อหน้า -->
+  <div class="per-page">
+    <label>แสดงต่อหน้า</label>
+    <select
+      [(ngModel)]="perPage"
+      (change)="changePerPage(perPage)"
+    >
+      <option [value]="10">10</option>
+      <option [value]="20">20</option>
+      <option [value]="50">50</option>
+      <option [value]="100">100</option>
+    </select>
+  </div>
+
+  
+
+  <!-- ปุ่มเปลี่ยนหน้า -->
+  <div class="pagination">
+    <button style="margin-right: 10px;" (click)="loadSkuMasters('desc')">ล่าสุด</button>
+
+
+
+
+    <button
+      (click)="goToPage(currentPage - 1)"
+      [disabled]="currentPage === 1"
+    >
+      ◀
+    </button>
+
+    <span>
+      หน้า {{ currentPage }} / {{ totalPages }}
+    </span>
+
+    <button
+      (click)="goToPage(currentPage + 1)"
+      [disabled]="currentPage === totalPages"
+    >
+      ▶
+    </button>
+  </div>
+</div>
+
+
+
+
+  <!-- ===== LOADING / ERROR ===== -->
+  <p *ngIf="loading">กำลังโหลดข้อมูล...</p>
+  <p class="error" *ngIf="error">{{ error }}</p>
+
+  <!-- ===== TABLE ===== -->
+  <div class="table-card" *ngIf="!loading && skuMasters && skuMasters.length > 0">
+
+    <table *ngIf="skuMasters.length > 0">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>ชื่อสินค้า</th>
+          <th>หมวด</th>
+          <th>ราคา</th>
+          <th>คงเหลือ</th>
+          <th>จัดการ</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let sku of skuMasters; index as i">
+          <td>{{ i + 1 }}</td>
+          <td>{{ sku.name }}</td>
+          <td>{{ sku.category_name }}</td>
+          <td>{{ sku.price_float }}</td>
+          <td>{{ sku.amount }}</td>
+          <td class="actions">
+            <button class="edit-btn" (click)="openEdit(sku)">✏️</button>
+            <button class="delete-btn" (click)="confirmDelete(sku.id)">🗑️</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+
+
+
+
+
+
+
+
+    <!-- NO DATA -->
+    <p class="no-data" *ngIf="skuMasters.length === 0">
+      ไม่พบสินค้าที่ตรงกับเงื่อนไข
+    </p>
+  </div>
+
+</div>
+
+<!-- ===== MODAL ADD / EDIT ===== -->
+<div class="modal" *ngIf="showForm">
+  <div class="modal-card">
+    <h3>{{ isEdit ? 'แก้ไขสินค้า' : 'เพิ่มสินค้า' }}</h3>
+
+    <div class="form-group">
+      <label>ชื่อสินค้า</label>
+      <input
+        type="text"
+        [(ngModel)]="form.name"
+        autofocus
+      />
+    </div>
+
+    <div class="form-group">
+      <label>หมวดสินค้า</label>
+      <select [(ngModel)]="form.category_id" class="form-control">
+        <option
+          *ngFor="let category of categories"
+          [value]="category.id"
+        >
+          {{ category.name }}
+        </option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>ราคา (บาท)</label>
+      <input
+        type="number"
+        [(ngModel)]="form.price"
+      />
+    </div>
+
+    <div class="form-group">
+      <label>จำนวนคงเหลือ</label>
+      <input
+        type="number"
+        [(ngModel)]="form.amount"
+      />
+    </div>
+
+    <div class="actions">
+      <button class="save-btn" (click)="save()">บันทึก</button>
+      <button class="cancel-btn" (click)="closeForm()">ยกเลิก</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SUCCESS ===== -->
+<div class="toast success" *ngIf="successMessage">
+  {{ successMessage }}
+</div>
+
+<!-- ===== ERROR ===== -->
+<div class="toast error" *ngIf="errorMessage">
+  {{ errorMessage }}
+</div>
+
+<!-- ===== DELETE CONFIRM ===== -->
+<div class="modal" *ngIf="showDeleteConfirm">
+  <div class="modal-card small">
+    <h3>ยืนยันการลบสินค้า</h3>
+    <p>คุณต้องการลบสินค้านี้ใช่หรือไม่?</p>
+
+    <div class="actions">
+      <button
+        class="delete-confirm-btn"
+        (click)="deleteConfirmed()"
+      >
+        ลบสินค้า
+      </button>
+      <button
+        class="cancel-btn"
+        (click)="cancelDelete()"
+      >
+        ยกเลิก
+      </button>
+    </div>
+  </div>
+</div>

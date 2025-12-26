@@ -1,0 +1,146 @@
+<div class="page">
+
+  <div class="page-header">
+    <h2>จัดการผู้ใช้ (Users)</h2>
+    <div class="header-actions">
+     <input
+        type="text"
+        placeholder="ค้นหาสินค้า..."
+        [(ngModel)]="keyword"
+        (input)="search()"
+      />
+      
+    <button class="add-btn" (click)="openAdd()">➕ เพิ่มผู้ใช้</button>
+  </div>
+  </div>
+
+<div class="page-header">
+  <section class="filter-bar">
+    <div class="form-group">
+      <label for="role">
+        <i class="fa fa-users"></i> ประเภทผู้ใช้
+      </label>
+      <select
+        id="role"
+        class="form-control role-select"
+        [(ngModel)]="role"
+        (change)="search_role()"
+      >
+        <option value="">ทั้งหมด</option>
+        <option value="user">User</option>
+        <option value="admin">Admin</option>
+      </select>
+    </div>
+  </section>
+</div>
+
+
+
+
+  <p *ngIf="loading">กำลังโหลดข้อมูล...</p>
+  <p class="error" *ngIf="error">{{ error }}</p>
+
+  <div class="table-card" *ngIf="!loading && users.length > 0">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Username</th>
+          <th>ชื่อ</th>
+          <th>จัดการ</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let u of users; index as i">
+          <td>{{ i + 1 }}</td>
+          <td>{{ u.username }}</td>
+          <td>{{ u.name }}</td>
+          <td class="actions">
+            <button (click)="openEdit(u)">✏️</button>
+            <button class="delete-btn" (click)="confirmDelete(u.id)">🗑️</button>
+
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal" *ngIf="showForm">
+  <div class="modal-card">
+    <h3>{{ isEdit ? 'แก้ไขผู้ใช้' : 'เพิ่มผู้ใช้' }}</h3>
+
+    <div class="form-group">
+      <label>Username</label>
+      <input [(ngModel)]="form.username">
+    </div>
+
+    <div class="form-group">
+      <label>ชื่อ</label>
+      <input [(ngModel)]="form.name">
+    </div>
+
+  <div class="form-group role-group">
+    <label>
+      <i class="fa fa-user-shield"></i>
+      ประเภทผู้ใช้
+    </label>
+
+    <select
+      [(ngModel)]="form.role"
+      class="form-control role-select"
+    >
+      <option value="user">👤 User</option>
+      <option value="admin">🛡️ Admin</option>
+    </select>
+  </div>
+
+
+
+<div class="form-group">
+  <label>รหัสผ่าน</label>
+  <input type="password" [(ngModel)]="form.password">
+</div>
+
+<div class="form-group">
+  <label>ยืนยันรหัสผ่าน</label>
+  <input type="password" [(ngModel)]="form.password_confirmation">
+</div>
+
+
+    <div class="actions">
+      <button class="save-btn" (click)="save()">บันทึก</button>
+      <button class="cancel-btn" (click)="closeForm()">ยกเลิก</button>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+<div class="toast" *ngIf="toast.show" [ngClass]="toast.type">
+  {{ toast.message }}
+</div>
+
+
+
+<!-- CONFIRM DELETE -->
+<div class="modal" *ngIf="showConfirm">
+  <div class="modal-card confirm">
+    <h3>ยืนยันการลบ</h3>
+    <p>คุณต้องการลบผู้ใช้นี้ใช่หรือไม่?</p>
+
+    <div class="actions">
+      <button class="cancel-btn" (click)="cancelDelete()">ยกเลิก</button>
+      <button class="delete-btn" (click)="deleteUser()">ลบ</button>
+    </div>
+  </div>
+</div>

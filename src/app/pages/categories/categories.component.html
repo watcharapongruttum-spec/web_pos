@@ -1,0 +1,84 @@
+<div class="page">
+  <div class="page-header">
+    <h2>จัดการประเภทสินค้า</h2>
+    <button class="add-btn" (click)="openAdd()">➕ เพิ่มประเภทสินค้า</button>
+  </div>
+
+  <p *ngIf="loading">กำลังโหลดข้อมูล...</p>
+  <p class="error" *ngIf="error">{{ error }}</p>
+
+  <div class="table-card" *ngIf="!loading && categories.length > 0">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>ชื่อประเภท</th>
+          <th>จัดการ</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let cat of categories; index as i">
+          <td>{{ i + 1 }}</td>
+          <td>{{ cat.name }}</td>
+          <td>
+            <button class="edit-btn" (click)="openEdit(cat)">✏️</button>
+            <button class="delete-btn" (click)="confirmDelete(cat.id)">🗑️</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Modal Add/Edit -->
+  <div class="modal" *ngIf="showForm">
+    <div class="modal-card">
+      <h3>{{ isEdit ? 'แก้ไขประเภทสินค้า' : 'เพิ่มประเภทสินค้า' }}</h3>
+      <input placeholder="ชื่อประเภท" [(ngModel)]="form.name" autofocus>
+      <div class="actions">
+        <button class="save-btn" (click)="save()">บันทึก</button>
+        <button class="cancel-btn" (click)="closeForm()">ยกเลิก</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Confirm Delete -->
+  <div class="modal" *ngIf="showConfirm">
+    <div class="modal-card confirm">
+      <h3>ยืนยันการลบ</h3>
+      <p>คุณต้องการลบประเภทสินค้านี้ใช่หรือไม่?</p>
+      <div class="actions">
+        <button class="cancel-btn" (click)="cancelDelete()">ยกเลิก</button>
+        <button class="delete-btn" (click)="deleteCategory()">ลบ</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" *ngIf="toast.show" [ngClass]="toast.type">
+    {{ toast.message }}
+  </div>
+</div>
+
+
+
+
+<!-- Modal Add/Edit -->
+<div class="modal" *ngIf="showForm">
+  <div class="modal-card">
+    <h3>{{ isEdit ? 'แก้ไขประเภทสินค้า' : 'เพิ่มประเภทสินค้า' }}</h3>
+
+    <div class="form-group">
+      <label>ชื่อประเภท</label>
+      <input
+        type="text"
+        [(ngModel)]="form.name"
+        autofocus
+      />
+    </div>
+
+    <div class="actions">
+      <button class="save-btn" (click)="save()">บันทึก</button>
+      <button class="cancel-btn" (click)="closeForm()">ยกเลิก</button>
+    </div>
+  </div>
+</div>

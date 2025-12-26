@@ -1,0 +1,96 @@
+.layout {
+  display: flex;
+  height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 220px;
+  background: #111827;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 16px;
+  transition: width 0.3s ease;
+}
+
+.brand {
+  font-size: 30px;
+  font-weight: bold;
+  margin-bottom: 32px;
+  color: #4584d0;
+  text-align: center;
+}
+
+/* Menu */
+.menu {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.menu a {
+  color: #d1d5db;
+  text-decoration: none;
+  padding: 12px 14px;
+  border-radius: 8px;
+  transition: all 0.2s;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.menu a:hover {
+  background: #1f2937;
+  color: #fff;
+}
+
+.menu a.active {
+  background: #315ab5;
+  color: #fff;
+}
+
+/* Logout */
+.logout-btn {
+  margin-top: auto;
+  background: #891d1d;
+  border: none;
+  color: white;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+/* Content */
+.content {
+  flex: 1;
+  background: #f3f4f6;
+  overflow-y: auto;
+    padding: 30px;
+}
+
+
+
+.toggle-btn {
+  font-size: 30px;
+  background: none;
+  border: none;
+  cursor: pointer;
+    color: #ffffff;
+    margin-left: 16px;
+}
+
+/* ===== Collapsed mode ===== */
+.layout.collapsed .sidebar {
+  width: 70px;
+}
+
+.layout.collapsed .sidebar span {
+  display: none;
+}
+
+.layout.collapsed .brand {
+  font-size: 14px;
+}
